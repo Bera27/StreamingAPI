@@ -7,6 +7,6 @@
 
         public int UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }
-        public List<ItemPlaylist> ItemPlaylists { get; set; } = new();
+        public List<ItemPlaylist> Items { get; set; } = new();
     }
 }

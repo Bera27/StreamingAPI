@@ -7,5 +7,8 @@
         public string Email { get; set; }
         public string SenhaHash { get; set; }
         public string Role { get; set; } = "Usuario";
+
+        public List<Conteudo> Conteudos { get; set; }
+        public List<Playlist> Playlists { get; set; }
     }
 }
