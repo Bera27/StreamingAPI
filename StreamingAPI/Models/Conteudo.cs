@@ -9,5 +9,6 @@
 
         public int CriadorId { get; set; }
         public Usuario? Criador { get; set; }
+        public List<ItemPlaylist> Items { get; set; } = new();
     }
 }
