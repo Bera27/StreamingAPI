@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StreamingAPI.Data;
+using StreamingAPI.Extension;
 using StreamingAPI.Models;
 using StreamingAPI.ViewModels;
 
@@ -13,8 +14,15 @@ namespace StreamingAPI.Controllers
         public async Task<IActionResult> GetAsync(
             [FromServices] StreamingDataContext context)
         {
-            var conteudos = await context.Conteudos.ToListAsync();
-            return Ok(conteudos);
+            try
+            {
+                var conteudos = await context.Conteudos.ToListAsync();
+                return Ok(new ResultViewModel<List<Conteudo>>(conteudos));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<List<Conteudo>>("CT10X - Erro ao buscar conteúdos"));
+            }
         }
 
         [HttpGet("v1/conteudos/{id:int}")]
@@ -22,12 +30,19 @@ namespace StreamingAPI.Controllers
             [FromRoute] int id,
             [FromServices] StreamingDataContext context)
         {
-            var conteudo = await context.Conteudos.FirstOrDefaultAsync(i => i.Id == id);
+            try
+            {
+                var conteudo = await context.Conteudos.FirstOrDefaultAsync(i => i.Id == id);
 
-            if (conteudo == null)
-                return NotFound();
+                if (conteudo == null)
+                    return NotFound(new ResultViewModel<Conteudo>("CT20X - Conteúdo não encontrado"));
 
-            return Ok(conteudo);
+                return Ok(new ResultViewModel<Conteudo>(conteudo));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<Conteudo>("CT21X - Erro ao buscar o conteúdo"));
+            }
         }
 
         [HttpPost("v1/conteudos")]
@@ -37,7 +52,7 @@ namespace StreamingAPI.Controllers
             [FromServices] StreamingDataContext context)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(new ResultViewModel<Conteudo>(ModelState.GetErrors()));
 
             try
             {
@@ -53,11 +68,11 @@ namespace StreamingAPI.Controllers
                 await context.Conteudos.AddAsync(conteudo);
                 await context.SaveChangesAsync();
 
-                return Created($"v1/conteudos/{conteudo.Id}", conteudo);
+                return Created($"v1/conteudos/{conteudo.Id}", new ResultViewModel<Conteudo>(conteudo));
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, "CT11X - Falha interna no servior" + ex.Message);
+                return StatusCode(500, new ResultViewModel<Conteudo>("CT30X - Erro ao salvar o conteúdo"));
             }
         }
 
@@ -73,7 +88,7 @@ namespace StreamingAPI.Controllers
                 var conteudo = await context.Conteudos.FirstOrDefaultAsync(i => i.Id == id);
 
                 if (conteudo == null)
-                    return NotFound();
+                    return NotFound(new ResultViewModel<Conteudo>("CT40X - Conteúdo não encontrado"));
 
                 conteudo.Titulo = model.Titulo;
                 conteudo.FileUrl = model.FileUrl;
@@ -82,11 +97,11 @@ namespace StreamingAPI.Controllers
                 context.Conteudos.Update(conteudo);
                 await context.SaveChangesAsync();
 
-                return Ok(model);
+                return Ok(new ResultViewModel<Conteudo>(conteudo));
             }
-            catch (Exception)
+            catch
             {
-                return StatusCode(500, "CT20X - Não foi possível atualizar");
+                return StatusCode(500, new ResultViewModel<Conteudo>("CT41X - Não foi possível atualizar o conteúdo"));
             }
         }
 
@@ -101,16 +116,16 @@ namespace StreamingAPI.Controllers
                 var conteudo = await context.Conteudos.FirstOrDefaultAsync(i => i.Id == id);
 
                 if (conteudo == null)
-                    NotFound();
+                    NotFound(new ResultViewModel<Conteudo>("CT50X - Conteúdo não encontrado"));
 
                 context.Conteudos.Remove(conteudo);
                 await context.SaveChangesAsync();
 
-                return Ok(conteudo);
+                return Ok(new ResultViewModel<Conteudo>(conteudo));
             }
-            catch (Exception)
+            catch
             {
-                return StatusCode(500, "CT30X - Não foi possível excluir o conteudo");
+                return StatusCode(500, new ResultViewModel<Conteudo>("CT51X - Não foi possível excluir o conteudo"));
             }
         }
 

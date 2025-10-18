@@ -6,7 +6,7 @@ namespace StreamingAPI.ViewModels
     public class EditorConteudoViewModel
     {
         [Required(ErrorMessage = "O titulo é obrigatório")]
-        [StringLength(40, MinimumLength = 10, ErrorMessage = "Este campo dever conter entre 3 e 40 caracteres")]
+        [StringLength(40, MinimumLength = 3, ErrorMessage = "Este campo dever conter entre 3 e 40 caracteres")]
         public string Titulo { get; set; }
         public string Tipo { get; set; }
         public string FileUrl { get; set; }
