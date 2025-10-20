@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreamingAPI.Data;
 
@@ -10,9 +11,11 @@ using StreamingAPI.Data;
 namespace StreamingAPI.Migrations
 {
     [DbContext(typeof(StreamingDataContext))]
-    partial class StreamingDataContextModelSnapshot : ModelSnapshot
+    [Migration("20251020211809_AlteracaoRole")]
+    partial class AlteracaoRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

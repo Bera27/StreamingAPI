@@ -37,8 +37,8 @@ namespace StreamingAPI.Data.Mappings
             builder.Property(x => x.Role)
                 .IsRequired()
                 .HasColumnName("Role")
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(20);
+                .HasConversion<string>()
+                .HasMaxLength(10);
 
             builder
                 .HasIndex(x => x.Email, "IX_Usuario_Email")
