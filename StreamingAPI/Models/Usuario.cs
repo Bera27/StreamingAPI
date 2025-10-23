@@ -1,6 +1,4 @@
-﻿using StreamingAPI.Models.Enums;
-
-namespace StreamingAPI.Models
+﻿namespace StreamingAPI.Models
 {
     public class Usuario
     {
@@ -8,8 +6,8 @@ namespace StreamingAPI.Models
         public string Nome { get; set; }
         public string Email { get; set; }
         public string SenhaHash { get; set; }
-        public RoleEnum Role { get; set; }
         
+        public IList<Role> Roles { get; set; }
         public List<Conteudo> Conteudos { get; set; }
         public List<Playlist> Playlists { get; set; }
     }
