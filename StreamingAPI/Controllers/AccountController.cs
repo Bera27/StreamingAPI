@@ -51,11 +51,35 @@ namespace StreamingAPI.Controllers
         }
 
         [HttpPost("v1/accounts/login")]
-        public IActionResult Login([FromServices] TokenService tokenService)
+        public async Task<IActionResult> Login(
+            [FromServices] TokenService tokenService,
+            [FromServices] StreamingDataContext context,
+            [FromBody] LoginViewModel model)
         {
-            var token = tokenService.GenerateToken(null);
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-            return Ok(token);
+            var usuario = await context
+                .Usuarios
+                .AsNoTracking()
+                .Include(x => x.Roles)
+                .FirstOrDefaultAsync(u => u.Email == model.Email);
+
+            if (usuario == null)
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+
+            if (!PasswordHasher.Verify(usuario.SenhaHash, model.Senha))
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+                
+            try
+            {
+                var token = tokenService.GenerateToken(usuario);
+                return Ok(new ResultViewModel<string>(token, null));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<string>("AC20L - Falha interna no servidor"));
+            }
         }
     }
 }
