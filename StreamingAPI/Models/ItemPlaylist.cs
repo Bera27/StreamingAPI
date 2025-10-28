@@ -7,7 +7,5 @@
 
         public int ConteudoId { get; set; }
         public Conteudo? Conteudo { get; set; }
-
-        public int Ordem { get; set; }
     }
 }

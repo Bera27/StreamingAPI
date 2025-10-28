@@ -9,6 +9,7 @@ namespace StreamingAPI.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Conteudo> Conteudos { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<ItemPlaylist> ItemPlaylists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlServer("Server=localhost,1433;Database=StreamingDb;User ID=sa;Password=1q2w3e4r@#$;Encrypt=True;TrustServerCertificate=True");
